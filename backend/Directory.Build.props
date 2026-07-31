@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!--
+      Warnings are errors. On a codebase with twenty modules and a "nothing is hardcoded" rule,
+      a nullable warning left to rot is how a null registry lookup reaches production at 2am.
+    -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: we do not demand an XML comment on every public member; we demand meaningful ones. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Identity">
+    <Product>AutoHub</Product>
+    <Company>AutoHub</Company>
+    <Authors>AutoHub Engineering</Authors>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+</Project>

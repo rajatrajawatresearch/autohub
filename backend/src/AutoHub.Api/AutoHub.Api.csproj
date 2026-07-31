@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoHub.SharedKernel\AutoHub.SharedKernel.csproj" />
+    <ProjectReference Include="..\AutoHub.Platform\AutoHub.Platform.csproj" />
+    <ProjectReference Include="..\AutoHub.Persistence\AutoHub.Persistence.csproj" />
+    <ProjectReference Include="..\AutoHub.Integrations\AutoHub.Integrations.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Analytics\AutoHub.Modules.Analytics.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Attachment\AutoHub.Modules.Attachment.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Auction\AutoHub.Modules.Auction.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Bookings\AutoHub.Modules.Bookings.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Catalog\AutoHub.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Chat\AutoHub.Modules.Chat.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Deals\AutoHub.Modules.Deals.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Documents\AutoHub.Modules.Documents.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Finance\AutoHub.Modules.Finance.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Identity\AutoHub.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Inspection\AutoHub.Modules.Inspection.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Insurance\AutoHub.Modules.Insurance.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Lease\AutoHub.Modules.Lease.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Listings\AutoHub.Modules.Listings.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Notifications\AutoHub.Modules.Notifications.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Payments\AutoHub.Modules.Payments.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Rental\AutoHub.Modules.Rental.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Reviews\AutoHub.Modules.Reviews.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Trust\AutoHub.Modules.Trust.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Valuation\AutoHub.Modules.Valuation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      `dotnet ef` resolves its design-time services from the startup project, so the tooling has to
+      find this package here even though the migrations themselves live in AutoHub.Persistence.
+      PrivateAssets keeps the scaffolder out of the published output.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Application">
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+
+  <ItemGroup Label="Api surface">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+  </ItemGroup>
+
+  <ItemGroup Label="Infrastructure">
+    <!--
+      Redis backs the registry cache's distributed tier, the permission cache and the readiness
+      probe. The multiplexer is resolved optionally everywhere it is used, so a laptop without
+      Redis degrades to in-process caching rather than failing to start.
+    -->
+    <PackageReference Include="StackExchange.Redis" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+  </ItemGroup>
+
+  <ItemGroup Label="Observability">
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+/* The console's only stylesheet.
+   Every token, every utility and the Tailwind import itself come from the design system; this file
+   exists to pull that in and to tell Tailwind's class scanner where this app's source lives. There
+   is no tailwind.config.js in this repo and there must not be one — @theme in tokens.css is it. */
+
+@import '@autohub/ui/styles.css';
+
+/* Tailwind v4 detects classes from the CSS file's own tree. The design system and the form renderer
+   ship as source and are transpiled by Next, so their classes have to be scanned too. */
+@source '../';
+@source '../../../../packages/ui/src';
+@source '../../../../packages/forms/src';

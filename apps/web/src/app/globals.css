@@ -1,0 +1,6 @@
+/* The design system is the only source of styling. This file exists to pull it in and to hold
+   nothing else — a rule that stops three portals from slowly growing three visual identities. */
+@import '@autohub/ui/styles.css';
+
+@source "../../../../packages/ui/src";
+@source "../";

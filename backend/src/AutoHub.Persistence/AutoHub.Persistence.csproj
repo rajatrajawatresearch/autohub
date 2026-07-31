@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>AutoHub.Persistence</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoHub.SharedKernel\AutoHub.SharedKernel.csproj" />
+    <ProjectReference Include="..\AutoHub.Platform\AutoHub.Platform.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Analytics\AutoHub.Modules.Analytics.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Attachment\AutoHub.Modules.Attachment.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Auction\AutoHub.Modules.Auction.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Bookings\AutoHub.Modules.Bookings.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Catalog\AutoHub.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Chat\AutoHub.Modules.Chat.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Deals\AutoHub.Modules.Deals.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Documents\AutoHub.Modules.Documents.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Finance\AutoHub.Modules.Finance.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Identity\AutoHub.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Inspection\AutoHub.Modules.Inspection.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Insurance\AutoHub.Modules.Insurance.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Lease\AutoHub.Modules.Lease.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Listings\AutoHub.Modules.Listings.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Notifications\AutoHub.Modules.Notifications.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Payments\AutoHub.Modules.Payments.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Rental\AutoHub.Modules.Rental.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Reviews\AutoHub.Modules.Reviews.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Trust\AutoHub.Modules.Trust.csproj" />
+    <ProjectReference Include="..\Modules\AutoHub.Modules.Valuation\AutoHub.Modules.Valuation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <!--
+      Design is a build-time asset, not a shipped one. `dotnet ef` needs it to build the model;
+      the running API has no business carrying a migration scaffolder in its process image.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+
+</Project>

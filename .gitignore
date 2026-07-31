@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# dotnet
+bin/
+obj/
+*.user
+artifacts/
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# infra volumes
+infra/.data/
+
+# editors / os
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# generated
+packages/api/src/generated/

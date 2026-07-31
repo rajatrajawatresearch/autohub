@@ -1,0 +1,38 @@
+{
+  "name": "autohub",
+  "private": true,
+  "version": "0.1.0",
+  "description": "India's automobile commerce operating system — buy, sell, rent, lease, auction, attach, finance, insure.",
+  "packageManager": "pnpm@10.30.1",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @autohub/web dev",
+    "dev:dealer": "pnpm --filter @autohub/dealer dev",
+    "dev:admin": "pnpm --filter @autohub/admin dev",
+    "dev:all": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm --recursive --filter './packages/*' build && pnpm --recursive --filter './apps/*' build",
+    "lint": "pnpm --recursive lint",
+    "typecheck": "pnpm --recursive typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,css}\"",
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "infra:reset": "docker compose -f infra/docker-compose.yml down -v && pnpm infra:up",
+    "api": "dotnet run --project backend/src/AutoHub.Api",
+    "api:watch": "dotnet watch --project backend/src/AutoHub.Api",
+    "db:migrate": "dotnet ef database update --project backend/src/AutoHub.Persistence --startup-project backend/src/AutoHub.Api",
+    "api:client": "node scripts/generate-api-client.mjs"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100,
+    "plugins": []
+  }
+}

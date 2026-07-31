@@ -1,0 +1,96 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.{cs,csx}]
+indent_size = 4
+max_line_length = 120
+
+[*.{csproj,props,targets,json,yml,yaml}]
+indent_size = 2
+
+[*.cs]
+
+# ── File-scoped namespaces, modern C# ───────────────────────────────────────────
+csharp_style_namespace_declarations = file_scoped:error
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
+csharp_using_directive_placement = outside_namespace:error
+dotnet_sort_system_directives_first = true
+
+# ── Deliberate analyzer suppressions ────────────────────────────────────────────
+# Each one is a decision, not an annoyance. If you add to this list, add the reason.
+
+# CA1716: "Error" collides with a VB.NET keyword.
+# We are not shipping a VB-consumable library; we are shipping an API. `Error` is the name the
+# whole team, the API contract, and every doc already uses. Renaming it to `ErrorInfo` to appease
+# a language we do not target would make the codebase worse.
+dotnet_diagnostic.CA1716.severity = none
+
+# CA1000: no static members on generic types.
+# `Result<T>.Success(value)` and `Result<T>.Failure(error)` are the entire ergonomics of the Result
+# type. The rule exists to stop awkward call sites like `List<int>.Create()`; here the generic
+# argument is inferred at every real call site and the alternative is a second static factory class
+# that everyone forgets exists.
+dotnet_diagnostic.CA1000.severity = none
+
+# CA1848 / CA1727: LoggerMessage source generators and log-template casing.
+# Worth adopting on the hot paths (bid submission, search) and noise everywhere else. Kept as a
+# suggestion so it guides rather than blocks; the auction module opts in explicitly.
+dotnet_diagnostic.CA1848.severity = suggestion
+dotnet_diagnostic.CA1727.severity = suggestion
+
+# CA1062: null-check public arguments.
+# Nullable reference types are enabled solution-wide and warnings are errors, so the compiler
+# already proves what this rule checks at runtime. Keeping both means writing the same guard twice.
+dotnet_diagnostic.CA1062.severity = none
+
+# CA2007: ConfigureAwait(false) on every await.
+# ASP.NET Core has no synchronization context. This rule is a WinForms/WPF-era tax that would add
+# noise to every line of every handler in the solution.
+dotnet_diagnostic.CA2007.severity = none
+
+# CA1054/CA1056: URI parameters should be System.Uri.
+# The integration registry stores provider endpoints as configurable strings; forcing Uri at every
+# boundary would mean parsing registry data into a type we immediately serialise back to a string.
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none
+
+# CA1711: type names should not end in a reserved suffix.
+# The reserved list is a museum of .NET Framework: "Permission" is reserved because of Code Access
+# Security's CodeAccessPermission, which does not exist in .NET 9, and "Attribute" because of
+# System.Attribute, which nothing here derives from.
+# Both words are load-bearing domain vocabulary we do not get to rename. The RBAC registry's whole
+# purpose is that code checks a Permission instead of a role; the taxonomy registry's whole purpose
+# is that a category exposes Attributes that become form fields and search facets. `PermissionEntry`
+# and `CategoryAttributeDefinition` would satisfy the analyzer and lie to the reader — the API
+# contract, the database tables, and every conversation with the client use these words.
+dotnet_diagnostic.CA1711.severity = none
+
+# ── Rules we deliberately keep loud ─────────────────────────────────────────────
+# CA1305/CA1304: culture-sensitive operations must be explicit. This codebase parses registration
+# numbers, currency, and dates from user input in a country with multiple locales. An implicit
+# ToUpper() that behaves differently under a Turkish locale is a real bug class, not a theoretical one.
+dotnet_diagnostic.CA1305.severity = error
+dotnet_diagnostic.CA1304.severity = error
+
+# CA2016: forward CancellationToken. A search or valuation request whose caller has hung up should
+# stop burning database time.
+dotnet_diagnostic.CA2016.severity = error
+
+# ── EF Core scaffolded migrations ───────────────────────────────────────────────
+# These files are written by `dotnet ef`, not by a person, and they are rewritten from scratch every
+# time the model changes. Hand-editing them to satisfy a style rule is work the next migration
+# throws away, and leaving the rules on means a schema change cannot be scaffolded until somebody
+# reformats several thousand generated lines. `generated_code = true` is the mechanism Roslyn
+# provides for exactly this situation: the analyzers still run on the configurations that produced
+# the migration, which is where a real defect would be.
+[**/Migrations/*.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none

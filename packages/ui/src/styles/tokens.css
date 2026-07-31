@@ -1,0 +1,291 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   AutoHub — "Registry"
+
+   The interface is a measuring instrument, not a shopfront. Green carries structure
+   and trust; yellow carries action and liveness; nothing else gets a colour unless
+   it is a status. No gradients. No glow. Near-square corners. Rules, not shadows.
+
+   Implements docs/01-design-system.md. Do not invent a token in a component — add
+   it here or use what exists.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Core ─────────────────────────────────────────────────────────────────── */
+  --color-tarmac: #0f1512; /* near-black, faintly green */
+  --color-highway: #0b3d2e; /* deep signage green — PRIMARY */
+  --color-highway-lit: #145a44; /* hover / raised primary */
+  --color-signal: #f2c230; /* commercial-plate yellow — ACTION, rationed */
+  --color-signal-lit: #ffd84d;
+  --color-plate: #f6f5f1; /* plate off-white — page background */
+  --color-chalk: #ffffff; /* card surface */
+
+  /* ── Neutral ramp — cool-green tinted, never pure grey ────────────────────── */
+  --color-n-950: #0f1512;
+  --color-n-900: #151d19;
+  --color-n-800: #1d2622;
+  --color-n-700: #2f3b35;
+  --color-n-600: #47544d;
+  --color-n-500: #64726a; /* secondary text — AA on chalk and plate */
+  --color-n-400: #94a09a;
+  --color-n-300: #c3cbc5;
+  --color-n-200: #dee3df; /* hairline rules */
+  --color-n-100: #edf0ec; /* subtle fills */
+  --color-n-50: #f6f8f5;
+
+  /* ── Status — the only other colours permitted ────────────────────────────── */
+  --color-flag: #c1402b; /* expired, rejected, overdue */
+  --color-flag-soft: #fbeae7;
+  --color-caution: #b5771a; /* pending, expiring soon */
+  --color-caution-soft: #fdf3e2;
+  --color-clear: #1e7a54; /* verified, settled, passed */
+  --color-clear-soft: #e6f4ed;
+  --color-info: #2c5a8c; /* informational, under review */
+  --color-info-soft: #e9f0f7;
+
+  /* ── Type ─────────────────────────────────────────────────────────────────── */
+  --font-display: var(--font-archivo), 'Archivo', system-ui, sans-serif;
+  --font-sans: var(--font-instrument), 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+
+  /* A signage scale — sizes chosen for reading distance, not a modular ratio. */
+  --text-display-xl: clamp(2.75rem, 6vw, 4.5rem);
+  --text-display-xl--line-height: 0.95;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-xl--font-weight: 700;
+
+  --text-display-lg: clamp(2rem, 4vw, 3rem);
+  --text-display-lg--line-height: 1.02;
+  --text-display-lg--letter-spacing: -0.025em;
+  --text-display-lg--font-weight: 700;
+
+  --text-heading: 1.375rem;
+  --text-heading--line-height: 1.25;
+  --text-heading--letter-spacing: -0.015em;
+  --text-heading--font-weight: 600;
+
+  --text-subheading: 1.0625rem;
+  --text-subheading--line-height: 1.35;
+  --text-subheading--font-weight: 600;
+
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.55;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+  --text-label--font-weight: 600;
+
+  --text-data: 0.875rem;
+  --text-data--line-height: 1.4;
+  --text-data--font-weight: 500;
+
+  --text-plate: 1.25rem;
+  --text-plate--line-height: 1;
+  --text-plate--letter-spacing: 0.14em;
+  --text-plate--font-weight: 700;
+
+  /* ── Geometry ─────────────────────────────────────────────────────────────── */
+  --radius-control: 2px;
+  --radius-card: 4px;
+  --radius-plate: 0px;
+
+  --spacing: 0.25rem;
+
+  --container-content: 72rem; /* customer surfaces */
+  --container-wide: 88rem; /* dealer and admin run wide — they have monitors */
+
+  /* Exactly two shadows exist. Structure comes from rules, not elevation. */
+  --shadow-raise: 0 1px 2px rgb(15 21 18 / 0.06), 0 2px 6px rgb(15 21 18 / 0.04);
+  --shadow-overlay: 0 8px 28px rgb(15 21 18 / 0.14);
+
+  --ease-instrument: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Semantic surface tokens.
+
+   Components reference these, never the raw ramp — which is what lets dark mode be
+   a real mode rather than a filter, and lets density change row heights without a
+   component knowing it happened.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  :root {
+    --surface-page: var(--color-plate);
+    --surface-card: var(--color-chalk);
+    --surface-sunken: var(--color-n-100);
+    --surface-inverse: var(--color-tarmac);
+
+    --text-primary: var(--color-n-950);
+    --text-secondary: var(--color-n-500);
+    --text-inverse: var(--color-plate);
+    --text-on-accent: var(--color-tarmac); /* yellow takes dark text. Always. */
+    --text-on-primary: #f2f7f4;
+
+    --border-hairline: var(--color-n-200);
+    --border-strong: var(--color-n-300);
+    --border-plate: var(--color-tarmac);
+
+    --accent-primary: var(--color-highway);
+    --accent-primary-hover: var(--color-highway-lit);
+    --accent-action: var(--color-signal);
+    --accent-action-hover: var(--color-signal-lit);
+
+    --focus-ring: var(--color-highway);
+
+    /* Density. Set once on <html>; every control derives from these. */
+    --density-control-h: 2.75rem; /* 44px — comfortable, touch-safe */
+    --density-row-h: 3.5rem;
+    --density-pad-x: 1rem;
+    --density-pad-y: 0.625rem;
+    --density-gap: 1rem;
+
+    color-scheme: light;
+  }
+
+  /* Dealer and admin: more rows per screen, mouse-driven, all day. */
+  :root[data-density='compact'] {
+    --density-control-h: 2.25rem; /* 36px */
+    --density-row-h: 2.5rem;
+    --density-pad-x: 0.75rem;
+    --density-pad-y: 0.375rem;
+    --density-gap: 0.75rem;
+  }
+
+  /* Dark is authored, not inverted. Dealers work at night; the signal yellow is
+     already a dark-surface colour and stays exactly as it is. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --surface-page: var(--color-tarmac);
+      --surface-card: var(--color-n-900);
+      --surface-sunken: #0b0f0d;
+      --surface-inverse: var(--color-plate);
+
+      --text-primary: #eef2ef;
+      --text-secondary: var(--color-n-400);
+      --text-inverse: var(--color-n-950);
+      --text-on-primary: #f2f7f4;
+
+      --border-hairline: #26302b;
+      --border-strong: #35413b;
+      --border-plate: #e8ece9;
+
+      --accent-primary: var(--color-highway-lit);
+      --accent-primary-hover: #1c7256;
+
+      --focus-ring: var(--color-signal);
+
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme='dark'] {
+    --surface-page: var(--color-tarmac);
+    --surface-card: var(--color-n-900);
+    --surface-sunken: #0b0f0d;
+    --surface-inverse: var(--color-plate);
+
+    --text-primary: #eef2ef;
+    --text-secondary: var(--color-n-400);
+    --text-inverse: var(--color-n-950);
+    --text-on-primary: #f2f7f4;
+
+    --border-hairline: #26302b;
+    --border-strong: #35413b;
+    --border-plate: #e8ece9;
+
+    --accent-primary: var(--color-highway-lit);
+    --accent-primary-hover: #1c7256;
+
+    --focus-ring: var(--color-signal);
+
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--border-hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible focus is not negotiable — an inspector fills a 200-point checklist by keyboard. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-control);
+  }
+
+  /* Every number in this product is read, compared, or transcribed. Tabular by default. */
+  .font-mono,
+  [class*='font-mono'] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'zero' 1; /* slashed zero — 0 and O are never ambiguous on a VIN */
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-tarmac);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* The RC-card atom: a small uppercase letter-spaced label above a value.
+     One repetition doing more for coherence than any other single decision. */
+  .ah-label {
+    font-size: var(--text-label);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .ah-hairline {
+    border-color: var(--border-hairline);
+  }
+
+  /* The one motion in the product. Applied only to a valuation reveal. */
+  @keyframes ah-odometer-roll {
+    from {
+      transform: translateY(0.5em);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .ah-odometer-digit {
+    display: inline-block;
+    animation: ah-odometer-roll 0.6s var(--ease-instrument) both;
+  }
+}

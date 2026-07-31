@@ -1,0 +1,30 @@
+{
+  "name": "@autohub/forms",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@autohub/api": "workspace:*",
+    "@autohub/ui": "workspace:*",
+    "@hookform/resolvers": "^3.10.0",
+    "json-logic-js": "^2.0.5",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@autohub/config": "workspace:*",
+    "@types/json-logic-js": "^2.0.8",
+    "@types/react": "^19.0.7",
+    "react": "^19.0.0",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

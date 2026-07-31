@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoHub.SharedKernel\AutoHub.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\AutoHub.Platform\AutoHub.Platform.csproj" />
+    <!--
+      Referenced for its Contracts folder only — IVehicleDirectory and IVehicleTaxonomy. A valuation
+      is a price for a canonical vehicle, and the homepage hero's entry point is a registration
+      number, so the module cannot start without resolving one through the catalog.
+    -->
+    <ProjectReference Include="..\AutoHub.Modules.Catalog\AutoHub.Modules.Catalog.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+</Project>

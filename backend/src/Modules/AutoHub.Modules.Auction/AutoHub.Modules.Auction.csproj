@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoHub.SharedKernel\AutoHub.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\AutoHub.Platform\AutoHub.Platform.csproj" />
+    <!--
+      The auction module opens a deal when a lot is won, through AutoHub.Modules.Deals.Contracts and
+      nothing else. The module isolation rule permits exactly this: another module's Contracts folder,
+      never its Domain, its Application or its DbContext. A using directive for
+      AutoHub.Modules.Deals.Domain in this project should be treated by a reviewer as a defect.
+    -->
+    <ProjectReference Include="..\AutoHub.Modules.Deals\AutoHub.Modules.Deals.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <!--
+      The bid gate's critical section is a Lua script executed inside Redis. There is no way to make
+      read-validate-write atomic across a network from C#, so the driver is part of the correctness
+      argument rather than an infrastructure detail.
+    -->
+    <PackageReference Include="StackExchange.Redis" />
+  </ItemGroup>
+
+</Project>
