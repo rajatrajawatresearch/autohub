@@ -1,0 +1,522 @@
+[
+  {
+    "surface": "web",
+    "label": "Customer portal",
+    "base": "http://localhost:3100",
+    "pages": [
+      [
+        "home",
+        "/",
+        "The plate-input hero"
+      ],
+      [
+        "buy",
+        "/buy",
+        "Search with registry-driven facets"
+      ],
+      [
+        "sell",
+        "/sell",
+        "The sell flow, rendered from the form registry"
+      ],
+      [
+        "attach",
+        "/attach",
+        "Taxi Attachment Centre"
+      ],
+      [
+        "rent",
+        "/rent",
+        "Rental — the same shell, a different intent"
+      ],
+      [
+        "lease",
+        "/lease",
+        "Lease"
+      ],
+      [
+        "login",
+        "/login",
+        "OTP, no password"
+      ]
+    ],
+    "shots": [
+      {
+        "slug": "home",
+        "caption": "The plate-input hero",
+        "file": "web/customer-portal/home.png",
+        "path": "/"
+      },
+      {
+        "slug": "buy",
+        "caption": "Search with registry-driven facets",
+        "file": "web/customer-portal/buy.png",
+        "path": "/buy"
+      },
+      {
+        "slug": "sell",
+        "caption": "The sell flow, rendered from the form registry",
+        "file": "web/customer-portal/sell.png",
+        "path": "/sell"
+      },
+      {
+        "slug": "attach",
+        "caption": "Taxi Attachment Centre",
+        "file": "web/customer-portal/attach.png",
+        "path": "/attach"
+      },
+      {
+        "slug": "rent",
+        "caption": "Rental — the same shell, a different intent",
+        "file": "web/customer-portal/rent.png",
+        "path": "/rent"
+      },
+      {
+        "slug": "lease",
+        "caption": "Lease",
+        "file": "web/customer-portal/lease.png",
+        "path": "/lease"
+      },
+      {
+        "slug": "login",
+        "caption": "OTP, no password",
+        "file": "web/customer-portal/login.png",
+        "path": "/login"
+      },
+      {
+        "slug": "home",
+        "caption": "The plate-input hero",
+        "file": "web/customer-portal/home-mobile.png",
+        "path": "/"
+      },
+      {
+        "slug": "buy",
+        "caption": "Search with registry-driven facets",
+        "file": "web/customer-portal/buy-mobile.png",
+        "path": "/buy"
+      },
+      {
+        "slug": "sell",
+        "caption": "The sell flow, rendered from the form registry",
+        "file": "web/customer-portal/sell-mobile.png",
+        "path": "/sell"
+      },
+      {
+        "slug": "attach",
+        "caption": "Taxi Attachment Centre",
+        "file": "web/customer-portal/attach-mobile.png",
+        "path": "/attach"
+      },
+      {
+        "slug": "rent",
+        "caption": "Rental — the same shell, a different intent",
+        "file": "web/customer-portal/rent-mobile.png",
+        "path": "/rent"
+      },
+      {
+        "slug": "lease",
+        "caption": "Lease",
+        "file": "web/customer-portal/lease-mobile.png",
+        "path": "/lease"
+      },
+      {
+        "slug": "login",
+        "caption": "OTP, no password",
+        "file": "web/customer-portal/login-mobile.png",
+        "path": "/login"
+      }
+    ]
+  },
+  {
+    "surface": "web",
+    "label": "Dealer portal",
+    "base": "http://localhost:3101",
+    "pages": [
+      [
+        "dashboard",
+        "/",
+        "Stock, ageing, payouts"
+      ],
+      [
+        "inventory",
+        "/inventory",
+        "The table a dealer lives in"
+      ],
+      [
+        "auction",
+        "/auction",
+        "The floor — the one place yellow is loud"
+      ],
+      [
+        "leads",
+        "/leads",
+        "Pipeline stages from the workflow registry"
+      ],
+      [
+        "requirements",
+        "/requirements",
+        "The requirement board"
+      ],
+      [
+        "wallet",
+        "/wallet",
+        "Ledger-backed balances"
+      ],
+      [
+        "settings",
+        "/settings",
+        "Branches, KYC, entitlements"
+      ]
+    ],
+    "shots": [
+      {
+        "slug": "dashboard",
+        "caption": "Stock, ageing, payouts",
+        "file": "web/dealer-portal/dashboard.png",
+        "path": "/"
+      },
+      {
+        "slug": "inventory",
+        "caption": "The table a dealer lives in",
+        "file": "web/dealer-portal/inventory.png",
+        "path": "/inventory"
+      },
+      {
+        "slug": "auction",
+        "caption": "The floor — the one place yellow is loud",
+        "file": "web/dealer-portal/auction.png",
+        "path": "/auction"
+      },
+      {
+        "slug": "leads",
+        "caption": "Pipeline stages from the workflow registry",
+        "file": "web/dealer-portal/leads.png",
+        "path": "/leads"
+      },
+      {
+        "slug": "requirements",
+        "caption": "The requirement board",
+        "file": "web/dealer-portal/requirements.png",
+        "path": "/requirements"
+      },
+      {
+        "slug": "wallet",
+        "caption": "Ledger-backed balances",
+        "file": "web/dealer-portal/wallet.png",
+        "path": "/wallet"
+      },
+      {
+        "slug": "settings",
+        "caption": "Branches, KYC, entitlements",
+        "file": "web/dealer-portal/settings.png",
+        "path": "/settings"
+      },
+      {
+        "slug": "dashboard",
+        "caption": "Stock, ageing, payouts",
+        "file": "web/dealer-portal/dashboard-mobile.png",
+        "path": "/"
+      },
+      {
+        "slug": "inventory",
+        "caption": "The table a dealer lives in",
+        "file": "web/dealer-portal/inventory-mobile.png",
+        "path": "/inventory"
+      },
+      {
+        "slug": "auction",
+        "caption": "The floor — the one place yellow is loud",
+        "file": "web/dealer-portal/auction-mobile.png",
+        "path": "/auction"
+      },
+      {
+        "slug": "leads",
+        "caption": "Pipeline stages from the workflow registry",
+        "file": "web/dealer-portal/leads-mobile.png",
+        "path": "/leads"
+      },
+      {
+        "slug": "requirements",
+        "caption": "The requirement board",
+        "file": "web/dealer-portal/requirements-mobile.png",
+        "path": "/requirements"
+      },
+      {
+        "slug": "wallet",
+        "caption": "Ledger-backed balances",
+        "file": "web/dealer-portal/wallet-mobile.png",
+        "path": "/wallet"
+      },
+      {
+        "slug": "settings",
+        "caption": "Branches, KYC, entitlements",
+        "file": "web/dealer-portal/settings-mobile.png",
+        "path": "/settings"
+      }
+    ]
+  },
+  {
+    "surface": "web",
+    "label": "Admin console",
+    "base": "http://localhost:3102",
+    "pages": [
+      [
+        "dashboard",
+        "/",
+        "Queues first, configuration second"
+      ],
+      [
+        "moderation",
+        "/moderation",
+        "Where a listing becomes public"
+      ],
+      [
+        "dealers",
+        "/dealers",
+        "Approval and KYC"
+      ],
+      [
+        "disputes",
+        "/disputes",
+        "Open cases hold escrow"
+      ],
+      [
+        "registry-taxonomy",
+        "/registry/taxonomy",
+        "The attribute editor"
+      ],
+      [
+        "registry-forms",
+        "/registry/forms",
+        "Form builder with a live preview"
+      ],
+      [
+        "registry-workflows",
+        "/registry/workflows",
+        "States, transitions, publish checks"
+      ],
+      [
+        "registry-pricing",
+        "/registry/pricing",
+        "Commission rules and the live tester"
+      ],
+      [
+        "registry-features",
+        "/registry/features",
+        "Modules and flags"
+      ],
+      [
+        "registry-i18n",
+        "/registry/i18n",
+        "Translation gaps"
+      ],
+      [
+        "registry-geo",
+        "/registry/geo",
+        "Serviceable cities"
+      ],
+      [
+        "registry-notifications",
+        "/registry/notifications",
+        "Event → audience → channel"
+      ],
+      [
+        "system-roles",
+        "/system/roles",
+        "Permissions, and their scope"
+      ],
+      [
+        "system-audit",
+        "/system/audit",
+        "Append-only"
+      ],
+      [
+        "system-integrations",
+        "/system/integrations",
+        "Provider fallback chains"
+      ]
+    ],
+    "shots": [
+      {
+        "slug": "dashboard",
+        "caption": "Queues first, configuration second",
+        "file": "web/admin-console/dashboard.png",
+        "path": "/"
+      },
+      {
+        "slug": "moderation",
+        "caption": "Where a listing becomes public",
+        "file": "web/admin-console/moderation.png",
+        "path": "/moderation"
+      },
+      {
+        "slug": "dealers",
+        "caption": "Approval and KYC",
+        "file": "web/admin-console/dealers.png",
+        "path": "/dealers"
+      },
+      {
+        "slug": "disputes",
+        "caption": "Open cases hold escrow",
+        "file": "web/admin-console/disputes.png",
+        "path": "/disputes"
+      },
+      {
+        "slug": "registry-taxonomy",
+        "caption": "The attribute editor",
+        "file": "web/admin-console/registry-taxonomy.png",
+        "path": "/registry/taxonomy"
+      },
+      {
+        "slug": "registry-forms",
+        "caption": "Form builder with a live preview",
+        "file": "web/admin-console/registry-forms.png",
+        "path": "/registry/forms"
+      },
+      {
+        "slug": "registry-workflows",
+        "caption": "States, transitions, publish checks",
+        "file": "web/admin-console/registry-workflows.png",
+        "path": "/registry/workflows"
+      },
+      {
+        "slug": "registry-pricing",
+        "caption": "Commission rules and the live tester",
+        "file": "web/admin-console/registry-pricing.png",
+        "path": "/registry/pricing"
+      },
+      {
+        "slug": "registry-features",
+        "caption": "Modules and flags",
+        "file": "web/admin-console/registry-features.png",
+        "path": "/registry/features"
+      },
+      {
+        "slug": "registry-i18n",
+        "caption": "Translation gaps",
+        "file": "web/admin-console/registry-i18n.png",
+        "path": "/registry/i18n"
+      },
+      {
+        "slug": "registry-geo",
+        "caption": "Serviceable cities",
+        "file": "web/admin-console/registry-geo.png",
+        "path": "/registry/geo"
+      },
+      {
+        "slug": "registry-notifications",
+        "caption": "Event → audience → channel",
+        "file": "web/admin-console/registry-notifications.png",
+        "path": "/registry/notifications"
+      },
+      {
+        "slug": "system-roles",
+        "caption": "Permissions, and their scope",
+        "file": "web/admin-console/system-roles.png",
+        "path": "/system/roles"
+      },
+      {
+        "slug": "system-audit",
+        "caption": "Append-only",
+        "file": "web/admin-console/system-audit.png",
+        "path": "/system/audit"
+      },
+      {
+        "slug": "system-integrations",
+        "caption": "Provider fallback chains",
+        "file": "web/admin-console/system-integrations.png",
+        "path": "/system/integrations"
+      },
+      {
+        "slug": "dashboard",
+        "caption": "Queues first, configuration second",
+        "file": "web/admin-console/dashboard-mobile.png",
+        "path": "/"
+      },
+      {
+        "slug": "moderation",
+        "caption": "Where a listing becomes public",
+        "file": "web/admin-console/moderation-mobile.png",
+        "path": "/moderation"
+      },
+      {
+        "slug": "dealers",
+        "caption": "Approval and KYC",
+        "file": "web/admin-console/dealers-mobile.png",
+        "path": "/dealers"
+      },
+      {
+        "slug": "disputes",
+        "caption": "Open cases hold escrow",
+        "file": "web/admin-console/disputes-mobile.png",
+        "path": "/disputes"
+      },
+      {
+        "slug": "registry-taxonomy",
+        "caption": "The attribute editor",
+        "file": "web/admin-console/registry-taxonomy-mobile.png",
+        "path": "/registry/taxonomy"
+      },
+      {
+        "slug": "registry-forms",
+        "caption": "Form builder with a live preview",
+        "file": "web/admin-console/registry-forms-mobile.png",
+        "path": "/registry/forms"
+      },
+      {
+        "slug": "registry-workflows",
+        "caption": "States, transitions, publish checks",
+        "file": "web/admin-console/registry-workflows-mobile.png",
+        "path": "/registry/workflows"
+      },
+      {
+        "slug": "registry-pricing",
+        "caption": "Commission rules and the live tester",
+        "file": "web/admin-console/registry-pricing-mobile.png",
+        "path": "/registry/pricing"
+      },
+      {
+        "slug": "registry-features",
+        "caption": "Modules and flags",
+        "file": "web/admin-console/registry-features-mobile.png",
+        "path": "/registry/features"
+      },
+      {
+        "slug": "registry-i18n",
+        "caption": "Translation gaps",
+        "file": "web/admin-console/registry-i18n-mobile.png",
+        "path": "/registry/i18n"
+      },
+      {
+        "slug": "registry-geo",
+        "caption": "Serviceable cities",
+        "file": "web/admin-console/registry-geo-mobile.png",
+        "path": "/registry/geo"
+      },
+      {
+        "slug": "registry-notifications",
+        "caption": "Event → audience → channel",
+        "file": "web/admin-console/registry-notifications-mobile.png",
+        "path": "/registry/notifications"
+      },
+      {
+        "slug": "system-roles",
+        "caption": "Permissions, and their scope",
+        "file": "web/admin-console/system-roles-mobile.png",
+        "path": "/system/roles"
+      },
+      {
+        "slug": "system-audit",
+        "caption": "Append-only",
+        "file": "web/admin-console/system-audit-mobile.png",
+        "path": "/system/audit"
+      },
+      {
+        "slug": "system-integrations",
+        "caption": "Provider fallback chains",
+        "file": "web/admin-console/system-integrations-mobile.png",
+        "path": "/system/integrations"
+      }
+    ]
+  }
+]

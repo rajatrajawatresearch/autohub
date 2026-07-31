@@ -114,6 +114,35 @@ public sealed class TaxonomyRegistry : ITaxonomyRegistry
         return new CategoryAttributes(version, category.Code, attributes);
     }
 
+    public async Task<Result<CategoryAttributes>> GetSearchableAttributesAsync(
+        CancellationToken cancellationToken)
+    {
+        var (snapshot, version) = await GetSnapshotAsync(cancellationToken);
+
+        // Presented as effective attributes with no category behind them: a definition's own
+        // required/searchable/style settings, with none of the per-category overrides applied,
+        // because there is no category to take them from. That is the honest projection for a
+        // cross-category search, and the fields the facet rail reads — label, style, options —
+        // come from the definition either way.
+        var attributes = snapshot.Attributes
+            .Where(definition => definition.IsSearchable)
+            .OrderBy(definition => definition.SortOrder)
+            .ThenBy(definition => definition.Code, StringComparer.Ordinal)
+            .Select(definition => AttributeView.From(new EffectiveAttribute(
+                definition,
+                definition.IsRequired,
+                definition.IsSearchable,
+                definition.FacetStyle,
+                definition.DisplayGroup,
+                definition.SortOrder,
+                Guid.Empty)))
+            .ToList();
+
+        // No category, because the caller has none — an unfiltered search spans every category and
+        // its facets do too. The empty code says so rather than pretending one was resolved.
+        return new CategoryAttributes(version, string.Empty, attributes);
+    }
+
     public async Task<Result<IReadOnlyDictionary<string, TypedAttributeValue>>> ValidateAttributesAsync(
         string categoryCode,
         JsonObject payload,

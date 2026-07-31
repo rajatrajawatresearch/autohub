@@ -1,3 +1,4 @@
+using AutoHub.Modules.Catalog.Contracts;
 using AutoHub.Modules.Listings.Application.Abstractions;
 using AutoHub.Modules.Listings.Contracts;
 using AutoHub.Platform.Taxonomy;
@@ -100,9 +101,13 @@ public sealed class PostgresListingSearchIndex : ISearchIndex
             var min = filter.Min;
             var max = filter.Max;
 
+            // Matches an attribute on either the listing or the car it is selling. The facts a buyer
+            // filters by live on the vehicle, so a subquery restricted to the listing found nothing
+            // and every filter returned an empty page — the same mistake the facet counts made.
+            // Listing first in the `||` so an override, where one exists, decides the match.
             documents = documents.Where(d => _context.EntityAttributeValues.Any(value =>
-                value.EntityType == ListingEntityTypes.Listing
-                && value.EntityId == d.ListingId
+                ((value.EntityType == ListingEntityTypes.Listing && value.EntityId == d.ListingId)
+                    || (value.EntityType == CatalogEntityTypes.Vehicle && value.EntityId == d.VehicleId))
                 && value.AttributeDefinitionId == id
                 && (anyOf.Count == 0 || (value.ValueText != null && anyOf.Contains(value.ValueText)))
                 && (min == null || value.ValueNumber >= min)
@@ -266,12 +271,20 @@ public sealed class PostgresListingSearchIndex : ISearchIndex
         CancellationToken cancellationToken)
     {
         var listingIds = documents.Select(d => d.ListingId);
+        var vehicleIds = documents.Select(d => d.VehicleId);
 
+        // Facet over the vehicles as well as the listings.
+        //
+        // Everything a buyer filters by — fuel, kilometres, owners, transmission, battery health —
+        // is a fact about the car, and the car is where it is stored. Counting only the listing's
+        // own attributes returned an empty facet set on a marketplace with seventeen vehicles in it,
+        // and an empty facet set is not a cosmetic failure: the rail vanishes, and with it the only
+        // demonstration that filters come from the taxonomy registry rather than from code.
         var values = _context.EntityAttributeValues
             .AsNoTracking()
             .Where(value =>
-                value.EntityType == ListingEntityTypes.Listing
-                && listingIds.Contains(value.EntityId));
+                (value.EntityType == ListingEntityTypes.Listing && listingIds.Contains(value.EntityId))
+                || (value.EntityType == CatalogEntityTypes.Vehicle && vehicleIds.Contains(value.EntityId)));
 
         var optionCounts = await values
             .Where(value => value.ValueText != null)

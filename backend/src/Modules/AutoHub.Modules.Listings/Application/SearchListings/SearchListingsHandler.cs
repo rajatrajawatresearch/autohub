@@ -118,6 +118,17 @@ public sealed class SearchListingsHandler : IRequestHandler<SearchListingsQuery,
             ? values.Value.ByEntity
             : new Dictionary<Guid, IReadOnlyList<ResolvedAttribute>>();
 
+        // The spec strip is a row of facts about the *car* — year, kms, fuel, owners — and those
+        // live on the vehicle, because they are true of it no matter how many times it is listed.
+        // Reading only the listing's own attributes left every card with an empty strip: the sale
+        // carries its asking price and almost nothing else.
+        var vehicleValues = await _registry.ResolveAttributeValuesAsync(
+            CatalogEntityTypes.Vehicle, [.. hits.Select(h => h.VehicleId)], cancellationToken);
+
+        var byVehicleAttributes = vehicleValues.IsSuccess
+            ? vehicleValues.Value.ByEntity
+            : new Dictionary<Guid, IReadOnlyList<ResolvedAttribute>>();
+
         var names = await DescribeVehiclesAsync(byVehicle.Values, cancellationToken);
 
         var items = new List<ListingResultItem>(hits.Count);
@@ -125,7 +136,13 @@ public sealed class SearchListingsHandler : IRequestHandler<SearchListingsQuery,
         foreach (var hit in hits)
         {
             byVehicle.TryGetValue(hit.VehicleId, out var vehicle);
-            var attributes = byListing.GetValueOrDefault(hit.ListingId) ?? [];
+
+            // Vehicle facts first, then anything the listing overrides or adds. A listing may
+            // legitimately disagree with the catalog — a seller correcting an odometer reading the
+            // RTO record got wrong — and the listing is the more recent claim.
+            var attributes = Merge(
+                byVehicleAttributes.GetValueOrDefault(hit.VehicleId) ?? [],
+                byListing.GetValueOrDefault(hit.ListingId) ?? []);
 
             items.Add(new ListingResultItem
             {
@@ -196,16 +213,24 @@ public sealed class SearchListingsHandler : IRequestHandler<SearchListingsQuery,
 
         var definitions = new Dictionary<string, AttributeView>(StringComparer.Ordinal);
 
-        if (!string.IsNullOrWhiteSpace(categoryCode))
-        {
-            var attributes = await _registry.GetAttributesForCategoryAsync(categoryCode, cancellationToken);
+        // Definitions are what give a facet its label, its option words and — most visibly — its
+        // style. Without them every facet degrades to an unlabelled `list`, so a range renders as an
+        // empty checkbox group: `owners` and `battery_kwh` came back as lists with no options, which
+        // is a filter a user cannot operate.
+        //
+        // Resolving them only when a category is selected was the bug. An unfiltered search — the
+        // first thing every visitor sees — has no category, so it got no definitions at all. Falling
+        // back to the whole searchable set costs one cached registry read and makes the default
+        // page work.
+        var attributes = string.IsNullOrWhiteSpace(categoryCode)
+            ? await _registry.GetSearchableAttributesAsync(cancellationToken)
+            : await _registry.GetAttributesForCategoryAsync(categoryCode, cancellationToken);
 
-            if (attributes.IsSuccess)
+        if (attributes.IsSuccess)
+        {
+            foreach (var attribute in attributes.Value.Attributes)
             {
-                foreach (var attribute in attributes.Value.Attributes)
-                {
-                    definitions[attribute.Code] = attribute;
-                }
+                definitions[attribute.Code] = attribute;
             }
         }
 
@@ -279,12 +304,53 @@ public sealed class SearchListingsHandler : IRequestHandler<SearchListingsQuery,
             : vehicle.RegistrationDisplay ?? vehicle.Registration ?? string.Empty;
     }
 
-    private static List<SpecStripItem> BuildSpecStrip(IReadOnlyList<ResolvedAttribute> attributes)
+    /// <summary>
+    /// Vehicle attributes with the listing's own layered on top, keyed by code.
+    /// </summary>
+    /// <remarks>
+    /// Order follows the vehicle's, because that is the taxonomy registry's authored
+    /// <c>sortOrder</c> and the strip reads left to right in it. A listing-only attribute lands at
+    /// the end rather than in the middle of the car's facts.
+    /// </remarks>
+    private static List<ResolvedAttribute> Merge(
+        IReadOnlyList<ResolvedAttribute> vehicle,
+        IReadOnlyList<ResolvedAttribute> listing)
+    {
+        if (listing.Count == 0)
+        {
+            return [.. vehicle];
+        }
+
+        var overrides = listing.ToDictionary(a => a.Code, StringComparer.Ordinal);
+        var merged = new List<ResolvedAttribute>(vehicle.Count + listing.Count);
+
+        foreach (var attribute in vehicle)
+        {
+            merged.Add(overrides.Remove(attribute.Code, out var replacement) ? replacement : attribute);
+        }
+
+        merged.AddRange(listing.Where(a => overrides.ContainsKey(a.Code)));
+        return merged;
+    }
+
+    /// <summary>
+    /// The card's spec row. Money is excluded — see <see cref="ListingDescriber"/> for why.
+    /// </summary>
+    /// <remarks>
+    /// This is the copy that mattered: it feeds the search cards, so a money attribute leaking
+    /// through here put raw paise under every vehicle on the marketplace's busiest screen.
+    /// </remarks>
+    private static List<SpecStripItem> BuildSpecStrip(List<ResolvedAttribute> attributes)
     {
         var items = new List<SpecStripItem>(attributes.Count);
 
         foreach (var attribute in attributes)
         {
+            if (string.Equals(attribute.DataType, "money", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             var value = attribute.DisplayValue ?? Stringify(attribute.Value);
 
             if (!string.IsNullOrWhiteSpace(value))

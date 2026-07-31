@@ -22,3 +22,17 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    # Bundled rather than fetched. A font that arrives over the network is a font that has not
+    # arrived when an inspector opens a checklist in a basement — and until these were added, every
+    # `fontFamily` in the design system silently fell back to the platform default, which meant the
+    # Registry typography existed on the web and nowhere else.
+    - family: Archivo
+      fonts:
+        - asset: assets/fonts/Archivo-Variable.ttf
+    - family: InstrumentSans
+      fonts:
+        - asset: assets/fonts/InstrumentSans-Variable.ttf
+    - family: JetBrainsMono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono-Variable.ttf

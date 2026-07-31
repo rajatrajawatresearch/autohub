@@ -37,6 +37,21 @@ public interface ITaxonomyRegistry
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Every attribute marked searchable, across all categories.
+    /// </summary>
+    /// <remarks>
+    /// For the search page that has no category yet — which is the first page every visitor sees.
+    /// Facet counts come back keyed by attribute code, and without definitions a facet has no
+    /// label, no option words and no style, so a range filter degrades into an empty checkbox
+    /// group. Asking per category cannot work here, because an unfiltered result set spans them.
+    /// <para>
+    /// Cached like every other registry read: the answer changes when an operator marks an
+    /// attribute searchable, which is a publish, not a request.
+    /// </para>
+    /// </remarks>
+    Task<Result<CategoryAttributes>> GetSearchableAttributesAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     /// Validates a submitted attribute payload against a category, collecting every error.
     /// </summary>
     /// <remarks>

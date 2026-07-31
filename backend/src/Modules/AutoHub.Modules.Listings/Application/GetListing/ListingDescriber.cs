@@ -130,6 +130,11 @@ public sealed class ListingDescriber
 
         foreach (var attribute in attributes)
         {
+            if (IsMoney(attribute))
+            {
+                continue;
+            }
+
             var value = attribute.DisplayValue ?? Stringify(attribute.Value);
 
             if (!string.IsNullOrWhiteSpace(value))
@@ -140,6 +145,26 @@ public sealed class ListingDescriber
 
         return items;
     }
+
+    /// <summary>
+    /// Money never belongs on the spec strip.
+    /// </summary>
+    /// <remarks>
+    /// Two reasons, and the first one shipped before anyone noticed. A spec item carries a datum and
+    /// a unit and nothing else — no currency, no data type — so a client has no way to know it is
+    /// looking at money, and rendered it verbatim: every card on the marketplace showed its price
+    /// twice, once as <c>₹13.9L</c> and once as <c>139000000</c>. Raw paise in front of a buyer is
+    /// the "format at the edge" rule producing exactly what it exists to prevent.
+    /// <para>
+    /// The second reason is that it was duplication even when it looked right. Price is a
+    /// first-class field on every listing response — <c>priceMinor</c> plus <c>currency</c> — and
+    /// every surface already renders it through the money component. A money attribute that is not
+    /// the asking price needs a home of its own with a currency beside it, not a row on a strip
+    /// designed for "38,400 km".
+    /// </para>
+    /// </remarks>
+    private static bool IsMoney(ResolvedAttribute attribute)
+        => string.Equals(attribute.DataType, "money", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// The invariant string form of a typed value.

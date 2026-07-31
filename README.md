@@ -118,6 +118,14 @@ extracting a module into its own service a project-reference change rather than 
 
 ---
 
+## Screenshots
+
+Every screen of all three portals, plus the mobile design sheet:
+**[`docs/screenshots/`](docs/screenshots/README.md)** — 59 images, captured from the running
+product against Postgres rather than fixtures.
+
+---
+
 ## The parts worth reading first
 
 | File | Why |

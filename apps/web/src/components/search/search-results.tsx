@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSearch, type ListingIntent } from '@autohub/api';
-import { Badge, Button, EmptyState, Input, Select, Skeleton, VehicleCard } from '@autohub/ui';
+import { Badge, Button, EmptyState, Input, Select, Skeleton, VehicleCard, cn } from '@autohub/ui';
 import { FacetRail } from './facet-rail';
 import { useSearchFilters } from './use-search-filters';
 import { useActiveCity } from '@/lib/use-active-city';
@@ -65,7 +65,16 @@ export function SearchResults({ intent }: { intent: ListingIntent }) {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-[15rem_1fr]">
+      {/* The rail's column only exists when there is a rail. `FacetRail` renders nothing when the
+          registry returns no facets, and a two-column grid with one child puts that child in the
+          15rem track — which is how an empty facet response turned the whole results grid into a
+          column of shredded cards. The layout must survive a registry answering with nothing. */}
+      <div
+        className={cn(
+          'mt-8 grid gap-10',
+          search.facets.length > 0 && 'lg:grid-cols-[15rem_1fr]',
+        )}
+      >
         <FacetRail
           facets={search.facets}
           filters={filters}

@@ -79,8 +79,14 @@ abstract final class AhText {
   );
 
   /// Anything read, compared or transcribed.
+  ///
+  /// The fallback is not boilerplate. JetBrains Mono has no glyph for the Indian rupee sign
+  /// (U+20B9), so every price in the product rendered as a tofu box — `▯8,47,350` — until the sans
+  /// face was put behind it. It was found by looking at a golden, which is the only way it could
+  /// have been found: nothing throws, and the string is correct all the way to the rasteriser.
   static const data = TextStyle(
     fontFamily: AhFonts.mono,
+    fontFamilyFallback: <String>[AhFonts.sans, AhFonts.display],
     fontSize: 14,
     height: 1.4,
     fontWeight: FontWeight.w500,
@@ -90,6 +96,7 @@ abstract final class AhText {
   /// The plate itself.
   static const plate = TextStyle(
     fontFamily: AhFonts.mono,
+    fontFamilyFallback: <String>[AhFonts.sans, AhFonts.display],
     fontSize: 20,
     height: 1,
     letterSpacing: 2.8,

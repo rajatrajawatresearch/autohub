@@ -30,6 +30,18 @@ export interface VehicleCardProps {
   /** Replaces the money entirely — an on-request line, a countdown, a fee note. */
   priceSlot?: ReactNode;
   specs?: SpecItem[];
+  /**
+   * How many spec rows a card shows.
+   *
+   * Bounded here rather than at every call site, because a card is a summary by definition and the
+   * registry decides how many attributes a category has — not the page rendering it. A commercial
+   * vehicle carries payload, axle configuration and permit type on top of the usual seven, and an
+   * unbounded strip turned the search grid into twelve columns of truncated text the first time a
+   * JCB appeared in the results. The detail page shows all of them, grouped, where there is room.
+   *
+   * Four is what fits one line on a 360dp card: year, kms, fuel, owners — the four a buyer scans.
+   */
+  maxSpecs?: number;
   media?: { coverUrl?: string | null; aspectRatio?: number; count?: number; alt?: string };
   /** Registry-labelled badges, rendered by the caller so no code maps a badge code to a word. */
   badges?: ReactNode;
@@ -49,6 +61,7 @@ export function VehicleCard({
   priceCompact = true,
   priceSlot,
   specs,
+  maxSpecs = 4,
   media,
   badges,
   status,
@@ -128,7 +141,7 @@ export function VehicleCard({
 
         {specs && specs.length > 0 ? (
           <SpecStrip
-            items={specs}
+            items={maxSpecs > 0 ? specs.slice(0, maxSpecs) : specs}
             size="sm"
             className="border-t border-[color:var(--border-hairline)] pt-3"
           />
