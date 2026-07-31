@@ -1,0 +1,7 @@
+# The workspace's rules, not a second opinion.
+#
+# `flutter create` leaves a per-app options file behind, and while it sits here the app's own
+# source is the one part of this workspace where `unawaited_futures` and `discarded_futures` are
+# merely lints. That is exactly backwards: a dropped future inside a package fails a unit test,
+# and a dropped future inside an app is a settlement the partner believes they submitted.
+include: ../../analysis_options.yaml

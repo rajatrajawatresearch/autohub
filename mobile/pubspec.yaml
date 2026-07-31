@@ -1,0 +1,16 @@
+name: autohub_mobile
+publish_to: none
+
+# A pub workspace: one lockfile, one `.dart_tool`, one resolution for six packages. The alternative
+# — six independent resolutions — is how two packages end up on two versions of the same
+# serialisation library and the failure surfaces as a runtime cast error in a release build.
+environment:
+  sdk: ^3.10.0
+
+workspace:
+  - packages/autohub_core
+  - packages/autohub_ui
+  - packages/autohub_forms
+  - apps/customer
+  - apps/dealer
+  - apps/partner

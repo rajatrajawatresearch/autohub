@@ -1,0 +1,30 @@
+name: autohub_partner
+description: AutoHub partner app.
+publish_to: none
+version: 0.1.0
+
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  autohub_core:
+    path: ../../packages/autohub_core
+  autohub_forms:
+    path: ../../packages/autohub_forms
+  autohub_ui:
+    path: ../../packages/autohub_ui
+  cached_network_image: ^3.4.1
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.6.2
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

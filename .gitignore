@@ -37,3 +37,34 @@ pnpm-debug.log*
 
 # generated
 packages/api/src/generated/
+
+# ── Flutter / Dart ────────────────────────────────────────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+*.iml
+mobile/**/build/
+
+# Per-package lockfiles: a pub workspace resolves once at mobile/pubspec.lock, and the stray
+# per-package ones only reappear to confuse the next person.
+mobile/packages/*/pubspec.lock
+mobile/apps/*/pubspec.lock
+
+# Generated Dart sources (*.g.dart, *.freezed.dart) are deliberately NOT ignored.
+#
+# Ignoring them is the more common convention and it is the wrong trade here: this repository is
+# meant to analyze clean the moment it is cloned, the same as the .NET and TypeScript halves do.
+# Ignoring them would mean `dart analyze` fails on a fresh clone until someone knows to run
+# build_runner first, which is a papercut paid by every new reader to save a diff nobody reads.
+# Regenerate with: cd mobile && dart run build_runner build --delete-conflicting-outputs
+
+# Platform build state, not source
+mobile/apps/*/android/.gradle/
+mobile/apps/*/android/local.properties
+mobile/apps/*/android/key.properties
+mobile/apps/*/ios/Pods/
+mobile/apps/*/ios/.symlinks/
+mobile/apps/*/ios/Flutter/Flutter.podspec
+mobile/apps/*/ios/Flutter/ephemeral/
+**/Podfile.lock

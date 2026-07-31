@@ -1,0 +1,9 @@
+# The dealer binary analyses under the workspace rules, not the scaffold's defaults.
+#
+# `flutter create` writes a per-app options file, and because the analyzer resolves the *nearest*
+# file walking up from each source, that scaffold silently shadowed `mobile/analysis_options.yaml`
+# for everything under `apps/dealer/`. The rules that shadow dropped are exactly the ones this app
+# cannot afford to lose: `unawaited_futures` — a bid nobody awaits is a bid the dealer believes
+# they placed — `discarded_futures`, and the exhaustive-switch error that turns a new `WriteOutcome`
+# case into a compile failure on the bid path instead of a silent fall-through.
+include: ../../analysis_options.yaml

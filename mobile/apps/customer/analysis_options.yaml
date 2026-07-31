@@ -1,0 +1,9 @@
+# The customer binary is held to the workspace's rules, not to the scaffold's.
+#
+# `flutter create` writes a per-app options file that pulls in `flutter_lints` and nothing else,
+# which means the promotions that matter here — `unawaited_futures`, `discarded_futures`,
+# `dead_code`, `non_exhaustive_switch_expression` as **errors** — would apply to none of this app.
+# Those are the defect classes that hurt most on a handset: a future nobody awaited is a listing the
+# seller believes they submitted, and a non-exhaustive switch over a contract enum is a blank
+# control that cannot be hot-fixed.
+include: ../../analysis_options.yaml

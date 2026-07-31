@@ -47,6 +47,10 @@ pnpm dev                       # customer portal  → http://localhost:3100
 pnpm dev:dealer                # dealer portal    → http://localhost:3101
 pnpm dev:admin                 # admin console    → http://localhost:3102
 pnpm dev:all                   # all three at once
+
+# 4. Mobile (Flutter 3.44+)
+cd mobile && flutter pub get
+flutter run --dart-define=API_URL=http://10.0.2.2:5180/api/v1   # 10.0.2.2 = host, from an emulator
 ```
 
 The frontends run **without the backend**. Set `NEXT_PUBLIC_API_MOCK=1` and `@autohub/api` serves
@@ -91,8 +95,21 @@ backend/       ASP.NET Core 9 modular monolith
     Modules/                 20 domain modules
 apps/          web · dealer · admin  (Next.js 15 App Router)
 packages/      ui (design system) · api (typed client) · forms (schema renderer) · config
+mobile/        Flutter pub workspace
+  packages/
+    autohub_core/    transport, models, registry cache, offline outbox, JsonLogic
+    autohub_ui/      the Registry design language as widgets
+    autohub_forms/   the Form Schema Registry's Flutter renderer
+  apps/              customer · dealer · partner
 infra/         docker-compose, Postgres init
 ```
+
+**Why the mobile app exists at all.** Three web portals sharing a TypeScript package agree with each
+other because they share code. A Flutter app, in a different language, compiled ahead of time and
+shipped through an app store, is the first real test of the claim on the front page: that adding a
+field to the sell flow reaches web, Android and iOS from one database row. The success criterion is
+written down in [`docs/10-mobile-architecture.md`](docs/10-mobile-architecture.md) §1, and if it
+stops being true the registries are decoration.
 
 **Module isolation:** a module may reference `SharedKernel`, `Platform`, and other modules'
 `Contracts` folder — never another module's `Domain`, `Application` or `DbContext`. Cross-module
@@ -136,6 +153,15 @@ extracting a module into its own service a project-reference change rather than 
 cd backend && dotnet test          # domain + engine unit tests
 pnpm typecheck                     # every workspace
 pnpm build                         # every package and app
+cd mobile && dart analyze          # zero issues; warnings are errors here too
+cd mobile && flutter test          # unit + widget tests, no device needed
+```
+
+Generated Dart sources (`*.g.dart`, `*.freezed.dart`) are committed so a fresh clone analyzes
+without knowing to run a code generator first. Regenerate after changing a model:
+
+```bash
+cd mobile && dart run build_runner build --delete-conflicting-outputs
 ```
 
 The unit suite covers the parts where being wrong is expensive: money allocation and rounding,
