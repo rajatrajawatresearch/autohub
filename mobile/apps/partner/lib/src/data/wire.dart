@@ -80,33 +80,9 @@ List<T> decodeAll<T>(Object? value, T Function(Map<String, Object?> json) decode
   return decoded;
 }
 
-/// A cursor-paginated list, per the contract's §0 envelope.
-///
-/// [nextCursor] is the whole reason this is a type rather than a bare list: dropping it is the
-/// single easiest way to build an infinite list that re-fetches page one forever.
-final class CursorPage<T> {
-  const CursorPage({required this.items, this.nextCursor, this.totalEstimate});
-
-  factory CursorPage.fromJson(
-    Map<String, Object?> json,
-    T Function(Map<String, Object?> json) decode,
-  ) =>
-      CursorPage<T>(
-        items: decodeAll<T>(json['items'], decode),
-        nextCursor: str(json['nextCursor']),
-        totalEstimate: intOrNull(json['totalEstimate']),
-      );
-
-  final List<T> items;
-
-  /// `null` when exhausted.
-  final String? nextCursor;
-
-  /// An estimate, never a `COUNT(*)`. Rendered as an approximation or not at all.
-  final int? totalEstimate;
-
-  bool get isEmpty => items.isEmpty;
-}
+// The §0 cursor envelope used to be declared here. It is a pinned contract shape, so it now lives
+// once in `autohub_core` as `CursorPage<T>` and arrives through the barrel this file imports —
+// same `fromJson`, same `isEmpty`, same "drop the row that will not decode" trade.
 
 /// The workflow state of an entity, as the registry declares it.
 ///

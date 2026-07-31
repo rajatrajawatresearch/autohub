@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:autohub_core/autohub_core.dart' hide WorkflowHistoryEntry;
+import 'package:autohub_core/autohub_core.dart';
 import 'package:autohub_forms/autohub_forms.dart';
 import 'package:autohub_ui/autohub_ui.dart';
 import 'package:flutter/material.dart' hide FormField;
@@ -489,29 +489,11 @@ class _History extends ConsumerWidget {
         ),
         const SizedBox(height: AhSpace.md),
         WorkflowTimeline(
-          entries: <WorkflowHistoryEntry>[
-            for (final entry in snapshot.history)
-              // An entry whose timestamp will not parse is dropped rather than rendered at the
-              // epoch. A 1970 row in an audit trail is worse than a missing one: it reorders the
-              // whole timeline and invites someone to argue from it.
-              if (DateTime.tryParse(entry.occurredAt) case final DateTime occurredAt)
-                WorkflowHistoryEntry(
-                  to: entry.to,
-                  occurredAt: occurredAt,
-                  from: entry.from,
-                  actionCode: entry.actionCode,
-                  actor: entry.actor,
-                  timeInPreviousState: entry.timeInPreviousState,
-                ),
-          ],
-          states: <WorkflowStateDefinition>[
-            for (final state in definition?.states ?? const <WorkflowState>[])
-              WorkflowStateDefinition(
-                code: state.code,
-                name: state.name,
-                category: state.category,
-              ),
-          ],
+          // Passed through untouched. Dropping an unparseable timestamp rather than drawing a 1970
+          // row is still the behaviour — it just lives in the timeline now, so the customer and
+          // partner apps cannot answer the same question differently.
+          entries: snapshot.history,
+          states: definition?.states ?? const <WorkflowState>[],
           empty: EmptyState(
             title: strings(DealerText.historyEmpty),
             align: CrossAxisAlignment.start,

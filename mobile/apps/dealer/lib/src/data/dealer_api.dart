@@ -1,6 +1,5 @@
 import 'package:autohub_core/autohub_core.dart';
 
-import 'models/cursor_page.dart';
 import 'models/deal.dart';
 import 'models/inventory_item.dart';
 import 'server_time.dart';

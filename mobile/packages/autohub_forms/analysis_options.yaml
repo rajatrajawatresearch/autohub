@@ -1,4 +1,10 @@
-include: package:flutter_lints/flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+# The workspace's rules, not the scaffold's.
+#
+# The analyzer resolves the *nearest* options file walking up from each source, so the scaffold file
+# `flutter create` leaves behind shadows `mobile/analysis_options.yaml` for the entire renderer.
+# This package reads values the server described and this build has never seen, which is exactly the
+# situation `strict-casts` and `strict-raw-types` exist for — without them a `Map` from a registry
+# document flows into a control as an implicit `dynamic` and fails at the user rather than at the
+# compiler. `discarded_futures` matters here too: an unawaited draft save is the tunnel losing the
+# seller's form.
+include: ../../analysis_options.yaml

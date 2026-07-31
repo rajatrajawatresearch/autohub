@@ -34,8 +34,6 @@ Map<String, Object?> _record(Object? value) {
   return const <String, Object?>{};
 }
 
-List<Object?> _list(Object? value) => value is List ? value : const <Object?>[];
-
 String? _string(Object? value) {
   if (value is String) return value;
   if (value is num || value is bool) return '$value';
@@ -48,53 +46,10 @@ int? _int(Object? value) {
   return null;
 }
 
-/// The cursor-paginated envelope from §0 of the contract.
-///
-/// Generic because the envelope is, and because a page of listings and a page of bookings differ
-/// only in what they carry. `totalEstimate` keeps its name: it is an estimate by contract and never
-/// a `COUNT(*)`, so the UI says "about" and never promises precision the server did not offer.
-@immutable
-final class CursorPage<T> {
-  const CursorPage({
-    this.items = const <Never>[],
-    this.nextCursor,
-    this.totalEstimate,
-  });
-
-  /// Decodes an envelope, skipping any item that will not parse.
-  ///
-  /// Skipping rather than failing is the same trade `autohub_core` makes at every decode seam and
-  /// it was learned expensively on the web: one malformed row must not blank a whole page. A
-  /// listing missing from a list is a support question; an empty garage looks like data loss.
-  factory CursorPage.fromJson(
-    Map<String, Object?> json,
-    T Function(Map<String, Object?> item) read,
-  ) {
-    final List<T> items = <T>[];
-    for (final Object? entry in _list(json['items'])) {
-      if (entry is! Map) continue;
-      try {
-        items.add(read(_record(entry)));
-      } on Object {
-        continue;
-      }
-    }
-    return CursorPage<T>(
-      items: items,
-      nextCursor: _string(json['nextCursor']),
-      totalEstimate: _int(json['totalEstimate']),
-    );
-  }
-
-  final List<T> items;
-
-  /// `null` when the list is exhausted. The infinite scroll stops on this, never on an item count.
-  final String? nextCursor;
-
-  final int? totalEstimate;
-
-  bool get hasMore => (nextCursor ?? '').isNotEmpty;
-}
+// The cursor envelope used to be declared here too. It now lives in `autohub_core` as
+// `CursorPage<T>`, reached through the barrel this file already imports — §0 of the contract is
+// pinned, so it was never provisional, and three apps each owning a copy is how one shape acquires
+// three decoders that drift.
 
 /// One thing the customer has agreed to: a test drive, an accepted offer, a booked inspection.
 ///

@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/strings.dart';
 import '../../data/auction_feed.dart';
-import '../../data/models/cursor_page.dart';
 import '../../widgets/async_section.dart';
 import '../../widgets/console.dart';
 import 'auction_floor_screen.dart' show bidPositionOf, bidTicketLabels;

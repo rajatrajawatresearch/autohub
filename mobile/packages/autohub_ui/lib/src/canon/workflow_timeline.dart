@@ -6,49 +6,19 @@ import '../theme/ah_theme.dart';
 import '../tokens/typography.dart';
 import 'status_pill.dart';
 
-/// One state as the workflow registry declares it. The only place a `code` becomes a name.
-@immutable
-class WorkflowStateDefinition {
-  const WorkflowStateDefinition({
-    required this.code,
-    required this.name,
-    required this.category,
-  });
-
-  final String code;
-
-  /// Already localised by the server.
-  final String name;
-
-  final AhStateCategory category;
-}
-
-/// One transition from `GET /{module}/{resource}/{id}/workflow`.
-@immutable
-class WorkflowHistoryEntry {
-  const WorkflowHistoryEntry({
-    required this.to,
-    required this.occurredAt,
-    this.from,
-    this.actionCode,
-    this.actor,
-    this.timeInPreviousState,
-  });
-
-  final String to;
-
-  /// UTC, as the API sends it.
-  final DateTime occurredAt;
-
-  final String? from;
-  final String? actionCode;
-  final String? actor;
-
-  /// ISO-8601 duration, e.g. `PT17H10M`, exactly as the server computed it. Not derived from the
-  /// gap between two [occurredAt] values here — the server knows about states this history may
-  /// have been paginated past.
-  final String? timeInPreviousState;
-}
+// This file used to declare its own `WorkflowStateDefinition` and `WorkflowHistoryEntry` — render
+// shapes that mirrored `autohub_core`'s `WorkflowState` and `WorkflowHistoryEntry` field for field,
+// differing only in that `occurredAt` had already been parsed to a `DateTime`.
+//
+// That second definition cost more than it bought. Both packages export their version, so the name
+// was ambiguous in every app that imported both barrels, and all three apps independently worked
+// around it with a `hide` clause and a hand-written remapping loop. Worse, those three loops did
+// not agree: two dropped a row whose timestamp would not parse, and the third substituted
+// `DateTime.now()` — which renders a fabricated instant in an audit trail as though it were fact.
+//
+// So the widget now takes the contract types straight from `autohub_core`, a caller can pass
+// `definition.states` and `snapshot.history` through untouched, and the one judgement about an
+// unparseable timestamp is made once, here, where it can be tested.
 
 @immutable
 class WorkflowTimelineLabels {
@@ -78,10 +48,11 @@ class WorkflowTimeline extends StatelessWidget {
     super.key,
   });
 
+  /// `history` from `GET /{module}/{resource}/{id}/workflow`, in the order the server sent it.
   final List<WorkflowHistoryEntry> entries;
 
   /// `states` from `GET /platform/workflows/{key}`.
-  final List<WorkflowStateDefinition> states;
+  final List<WorkflowState> states;
 
   final bool newestFirst;
   final WorkflowTimelineLabels labels;
@@ -93,13 +64,14 @@ class WorkflowTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (entries.isEmpty) return empty ?? const SizedBox.shrink();
+    final rows = _renderable();
+    if (rows.isEmpty) return empty ?? const SizedBox.shrink();
 
     final surfaces = context.ahSurfaces;
-    final byCode = <String, WorkflowStateDefinition>{
+    final byCode = <String, WorkflowState>{
       for (final state in states) state.code: state,
     };
-    final ordered = newestFirst ? entries.reversed.toList() : entries;
+    final ordered = newestFirst ? rows.reversed.toList() : rows;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,12 +79,13 @@ class WorkflowTimeline extends StatelessWidget {
       children: <Widget>[
         for (var index = 0; index < ordered.length; index += 1)
           _Entry(
-            entry: ordered[index],
+            entry: ordered[index].entry,
+            occurredAt: ordered[index].occurredAt,
             // A code with no definition still renders, as its own raw code in a neutral chip.
             // Falling back rather than throwing matters here: a paginated or migrated history can
             // legitimately reference a state the current registry version no longer declares, and
             // an audit trail that crashes is worse than one with an unfamiliar word in it.
-            state: byCode[ordered[index].to],
+            state: byCode[ordered[index].entry.to],
             labels: labels,
             isLatest: newestFirst ? index == 0 : index == ordered.length - 1,
             isLast: index == ordered.length - 1,
@@ -121,11 +94,29 @@ class WorkflowTimeline extends StatelessWidget {
       ],
     );
   }
+
+  /// The entries this widget is willing to draw, each paired with its parsed instant.
+  ///
+  /// A row whose `occurredAt` will not parse is dropped rather than rendered at the epoch or at
+  /// `DateTime.now()`. Both of those substitute a timestamp the server never sent into a record
+  /// people argue from: the epoch reorders the whole timeline and reads as a 1970 transition, and
+  /// "now" is worse still, because it is plausible. A trail that is one row short announces less
+  /// than a trail that is confidently wrong.
+  List<({WorkflowHistoryEntry entry, DateTime occurredAt})> _renderable() {
+    final rows = <({WorkflowHistoryEntry entry, DateTime occurredAt})>[];
+    for (final entry in entries) {
+      final parsed = DateTime.tryParse(entry.occurredAt);
+      if (parsed == null) continue;
+      rows.add((entry: entry, occurredAt: parsed.toUtc()));
+    }
+    return rows;
+  }
 }
 
 class _Entry extends StatelessWidget {
   const _Entry({
     required this.entry,
+    required this.occurredAt,
     required this.state,
     required this.labels,
     required this.isLatest,
@@ -134,7 +125,12 @@ class _Entry extends StatelessWidget {
   });
 
   final WorkflowHistoryEntry entry;
-  final WorkflowStateDefinition? state;
+
+  /// [entry]'s `occurredAt`, already parsed and known good — the caller filtered the rows that
+  /// were not, so there is no failure to re-handle here.
+  final DateTime occurredAt;
+
+  final WorkflowState? state;
   final WorkflowTimelineLabels labels;
   final bool isLatest;
   final bool isLast;
@@ -212,7 +208,7 @@ class _Entry extends StatelessWidget {
                     runSpacing: 2,
                     children: <Widget>[
                       Text(
-                        formatIstStamp(entry.occurredAt),
+                        formatIstStamp(occurredAt),
                         style: AhText.data.copyWith(
                           fontSize: 13,
                           color: surfaces.textPrimary,

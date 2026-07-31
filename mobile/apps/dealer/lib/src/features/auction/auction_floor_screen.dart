@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/routes.dart';
 import '../../app/strings.dart';
-import '../../data/models/cursor_page.dart';
 import '../../data/server_time.dart';
 import '../../widgets/async_section.dart';
 import '../../widgets/console.dart';

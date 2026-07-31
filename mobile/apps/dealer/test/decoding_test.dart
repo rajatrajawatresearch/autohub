@@ -1,5 +1,4 @@
 import 'package:autohub_core/autohub_core.dart';
-import 'package:autohub_dealer/src/data/models/cursor_page.dart';
 import 'package:autohub_dealer/src/data/models/deal.dart';
 import 'package:autohub_dealer/src/data/models/inventory_item.dart';
 import 'package:flutter_test/flutter_test.dart';

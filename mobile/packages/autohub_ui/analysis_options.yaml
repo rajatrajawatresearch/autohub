@@ -1,4 +1,9 @@
-include: package:flutter_lints/flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+# The workspace's rules, not the scaffold's.
+#
+# The analyzer resolves the *nearest* options file walking up from each source, so the scaffold that
+# `flutter create` leaves here shadows `mobile/analysis_options.yaml` for the whole design language.
+# The rule that matters most in this package is `non_exhaustive_switch_expression` as an error: the
+# canon switches over the closed contract enums to pick a colour, and when the contract adds a
+# workflow state category the compiler must point at every widget that has to decide about it.
+# Downgraded to a warning, a new category renders as a blank pill that no deploy can fix.
+include: ../../analysis_options.yaml

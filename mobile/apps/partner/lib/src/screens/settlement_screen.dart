@@ -1,3 +1,4 @@
+import 'package:autohub_core/autohub_core.dart';
 import 'package:autohub_ui/autohub_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app/partner_text.dart';
 import '../data/attachment_models.dart';
 import '../data/partner_providers.dart';
-import '../data/wire.dart';
 import '../widgets/failure_view.dart';
 import '../widgets/partner_page.dart';
 import 'contract_screen.dart';

@@ -3,7 +3,6 @@ import 'package:autohub_partner/src/app/partner_side.dart';
 import 'package:autohub_partner/src/app/partner_text.dart';
 import 'package:autohub_partner/src/data/attachment_models.dart';
 import 'package:autohub_partner/src/data/partner_providers.dart';
-import 'package:autohub_partner/src/data/wire.dart';
 import 'package:autohub_partner/src/screens/matches_screen.dart';
 import 'package:autohub_ui/autohub_ui.dart';
 import 'package:flutter/material.dart';

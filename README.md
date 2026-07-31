@@ -154,7 +154,7 @@ cd backend && dotnet test          # domain + engine unit tests
 pnpm typecheck                     # every workspace
 pnpm build                         # every package and app
 cd mobile && dart analyze          # zero issues; warnings are errors here too
-cd mobile && flutter test          # unit + widget tests, no device needed
+cd mobile && ./tool/test_all.sh    # all six suites, no device needed
 ```
 
 Generated Dart sources (`*.g.dart`, `*.freezed.dart`) are committed so a fresh clone analyzes

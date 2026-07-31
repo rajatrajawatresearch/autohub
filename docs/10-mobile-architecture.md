@@ -207,8 +207,13 @@ The same standard as the rest of the repository: it compiles clean, its tests pa
 
 ```
 cd mobile && dart analyze          # zero issues; warnings are errors here as they are in C#
-cd mobile && flutter test          # unit + widget tests
+cd mobile && ./tool/test_all.sh    # all six suites, in dependency order
 ```
+
+`flutter test` at the workspace root does **not** work, and this document said it did until someone
+tried it. Flutter has no workspace-wide runner: at the root it looks for `mobile/test/`, which does
+not and should not exist. `tool/test_all.sh` runs the six suites and exits non-zero if any of them
+fails, which is the thing CI actually needs.
 
 The tests that matter are the ones that would catch the architecture failing:
 

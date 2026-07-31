@@ -10,7 +10,6 @@ import '../app/partner_text.dart';
 import '../data/attachment_models.dart';
 import '../data/attachment_writes.dart';
 import '../data/partner_providers.dart';
-import '../data/wire.dart';
 import '../widgets/commission_view.dart';
 import '../widgets/failure_view.dart';
 import '../widgets/partner_page.dart';

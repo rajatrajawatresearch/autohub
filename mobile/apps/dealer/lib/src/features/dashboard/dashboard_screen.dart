@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/routes.dart';
 import '../../app/strings.dart';
-import '../../data/models/cursor_page.dart';
 import '../../data/models/deal.dart';
 import '../../data/models/inventory_item.dart';
 import '../../data/server_time.dart';

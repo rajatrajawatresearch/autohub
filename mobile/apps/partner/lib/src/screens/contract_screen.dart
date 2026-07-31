@@ -12,7 +12,6 @@ import '../data/attachment_api.dart';
 import '../data/attachment_models.dart';
 import '../data/attachment_writes.dart';
 import '../data/partner_providers.dart';
-import '../data/wire.dart';
 import '../widgets/compliance_view.dart';
 import '../widgets/contract_timeline.dart';
 import '../widgets/failure_view.dart';

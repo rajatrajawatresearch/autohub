@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:autohub_core/autohub_core.dart' hide WorkflowHistoryEntry;
-import 'package:autohub_core/autohub_core.dart' as core show WorkflowHistoryEntry;
+import 'package:autohub_core/autohub_core.dart';
 import 'package:autohub_ui/autohub_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -300,28 +299,11 @@ class _History extends ConsumerWidget {
         ref.watch(workflowDefinitionProvider(workflow.workflowKey));
 
     return WorkflowTimeline(
-      states: <WorkflowStateDefinition>[
-        for (final WorkflowState state in definition.valueOrNull?.states ?? const <WorkflowState>[])
-          WorkflowStateDefinition(
-            code: state.code,
-            name: state.name,
-            category: state.category,
-          ),
-      ],
-      entries: <WorkflowHistoryEntry>[
-        for (final core.WorkflowHistoryEntry entry in workflow.history)
-          WorkflowHistoryEntry(
-            to: entry.to,
-            from: entry.from,
-            actionCode: entry.actionCode,
-            // The server sends ISO-8601 UTC. An unparseable stamp would be a contract violation;
-            // falling back to the entry's own position rather than throwing keeps an audit trail
-            // readable, and an audit trail that crashes is worse than one with an odd date in it.
-            occurredAt: DateTime.tryParse(entry.occurredAt)?.toUtc() ?? DateTime.now().toUtc(),
-            actor: entry.actor,
-            timeInPreviousState: entry.timeInPreviousState,
-          ),
-      ],
+      // Both lists go through exactly as the API returned them. The timeline parses the timestamps
+      // and decides what to do with one that will not parse, so there is no per-app remapping loop
+      // here to drift out of step with the dealer's and the partner's.
+      states: definition.valueOrNull?.states ?? const <WorkflowState>[],
+      entries: workflow.history,
       empty: Text(
         t(CustomerText.listingHistoryEmpty),
         style: AhText.bodySm.copyWith(color: context.ahSurfaces.textSecondary),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:autohub_core/autohub_core.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/ah_density.dart';
@@ -56,6 +57,34 @@ class AhInMemoryThemeStore implements AhThemeStore {
 
   @override
   Future<void> write(AhThemeMode mode) async => _value = mode;
+}
+
+/// [AhThemeStore] over `autohub_core`'s preference table — the implementation every app was
+/// writing for itself.
+///
+/// The customer and partner binaries each carried a byte-identical copy of this, down to the
+/// `'theme_mode'` key. Two copies of a storage key is a bug waiting for someone to fix a typo in
+/// one of them and silently strand every user who had chosen dark.
+///
+/// It lives here, beside the port, rather than in an app: this opens no database. It holds a
+/// [DevicePreferences] the app constructed and hands it two strings — which is the distinction the
+/// [AhThemeStore] doc draws when it says this package has no business opening a keystore. The
+/// preference table rather than the keychain because a theme is not a secret and it is read on the
+/// very first frame, where a platform-channel hop would cost a light flash.
+final class AhPreferencesThemeStore implements AhThemeStore {
+  const AhPreferencesThemeStore(this._preferences);
+
+  /// The one spelling of the key. Public so a migration or a settings-reset screen can name it
+  /// without guessing.
+  static const String key = 'theme_mode';
+
+  final DevicePreferences _preferences;
+
+  @override
+  Future<AhThemeMode?> read() async => AhThemeMode.tryParse(await _preferences.read(key));
+
+  @override
+  Future<void> write(AhThemeMode mode) => _preferences.write(key, mode.storageKey);
 }
 
 /// Holds the choice and writes it through.

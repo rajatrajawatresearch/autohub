@@ -1,8 +1,4 @@
-// `autohub_core` and `autohub_ui` both publish a `WorkflowHistoryEntry`: the core one is the wire
-// shape with an ISO string, the UI one is the render shape with a `DateTime`. Hiding the core name
-// here rather than aliasing a whole package keeps the conversion visible in one file — which is
-// exactly where a timestamp parse belongs.
-import 'package:autohub_core/autohub_core.dart' hide WorkflowHistoryEntry;
+import 'package:autohub_core/autohub_core.dart';
 import 'package:autohub_ui/autohub_ui.dart';
 import 'package:flutter/widgets.dart';
 
@@ -41,7 +37,9 @@ class ContractTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     return WorkflowTimeline(
       states: _states(),
-      entries: _entries(),
+      // The wire shape, straight through. The timeline drops a row whose timestamp will not parse
+      // rather than dating it to the epoch, which is the answer this file used to give on its own.
+      entries: snapshot.history,
       empty: Text(
         emptyMessage,
         style: AhText.bodySm.copyWith(color: context.ahSurfaces.textSecondary),
@@ -49,56 +47,19 @@ class ContractTimeline extends StatelessWidget {
     );
   }
 
-  List<WorkflowStateDefinition> _states() {
-    final List<WorkflowStateDefinition> states = <WorkflowStateDefinition>[
-      for (final WorkflowState state in definition?.states ?? const <WorkflowState>[])
-        WorkflowStateDefinition(
-          code: state.code,
-          name: state.name,
-          category: state.category,
-        ),
+  List<WorkflowState> _states() {
+    final List<WorkflowState> states = <WorkflowState>[
+      ...?definition?.states,
     ];
 
     // The snapshot always knows its own current state, definition or not. Appending it costs one
     // row and buys a correctly-named, correctly-toned chip for the entry a partner is most likely
     // to be looking at.
     final WorkflowState current = snapshot.currentState;
-    if (!states.any((WorkflowStateDefinition known) => known.code == current.code)) {
-      states.add(
-        WorkflowStateDefinition(
-          code: current.code,
-          name: current.name,
-          category: current.category,
-        ),
-      );
+    if (!states.any((WorkflowState known) => known.code == current.code)) {
+      states.add(current);
     }
 
     return states;
-  }
-
-  List<WorkflowHistoryEntry> _entries() {
-    final List<WorkflowHistoryEntry> entries = <WorkflowHistoryEntry>[];
-    // The loop variable is deliberately left to inference: its type is `autohub_core`'s
-    // `WorkflowHistoryEntry`, which this library has hidden so that the name below refers to
-    // `autohub_ui`'s. Naming it is not possible here; needing to is the signal that the conversion
-    // belongs in exactly one file, which is this one.
-    for (final entry in snapshot.history) {
-      final DateTime? occurredAt = DateTime.tryParse(entry.occurredAt);
-      // A history row whose timestamp will not parse is dropped rather than rendered at the epoch.
-      // An audit trail that claims a termination happened in 1970 is worse than one that is a row
-      // short, because the first is read as fact.
-      if (occurredAt == null) continue;
-      entries.add(
-        WorkflowHistoryEntry(
-          to: entry.to,
-          occurredAt: occurredAt,
-          from: entry.from,
-          actionCode: entry.actionCode,
-          actor: entry.actor,
-          timeInPreviousState: entry.timeInPreviousState,
-        ),
-      );
-    }
-    return entries;
   }
 }

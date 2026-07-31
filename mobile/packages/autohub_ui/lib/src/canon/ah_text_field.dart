@@ -208,9 +208,9 @@ class _Message extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AhColors.flagSoft,
-          border: const Border(left: BorderSide(color: AhColors.flag, width: 2)),
+          border: Border(left: BorderSide(color: AhColors.flag, width: 2)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AhSpace.sm, vertical: AhSpace.xs),

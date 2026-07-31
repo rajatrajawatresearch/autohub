@@ -17,7 +17,6 @@ import '../app/partner_side.dart';
 import '../app/partner_text.dart';
 import 'attachment_api.dart';
 import 'attachment_models.dart';
-import 'wire.dart';
 
 /* ── Transport ────────────────────────────────────────────────────────────── */
 
@@ -199,27 +198,12 @@ final StreamProvider<List<OutboxEntry>> outboxEntriesProvider =
 
 /* ── Theme ────────────────────────────────────────────────────────────────── */
 
-/// Persists the theme choice in device preferences.
-///
-/// `autohub_ui` declares the port and refuses to implement it — it is the package that knows what a
-/// colour is and has no business opening a database — so the app supplies this.
-final class PreferencesThemeStore implements AhThemeStore {
-  const PreferencesThemeStore(this._preferences);
-
-  static const String _key = 'theme_mode';
-
-  final DevicePreferences _preferences;
-
-  @override
-  Future<AhThemeMode?> read() async => AhThemeMode.tryParse(await _preferences.read(_key));
-
-  @override
-  Future<void> write(AhThemeMode mode) => _preferences.write(_key, mode.storageKey);
-}
-
+/// The store itself is `autohub_ui`'s [AhPreferencesThemeStore]. This app used to declare its own,
+/// identical to the customer app's down to the storage key — one spelling of `'theme_mode'` is
+/// worth more than two copies of the sentence explaining it.
 final Provider<AhThemeController> themeControllerProvider = Provider<AhThemeController>((ref) {
   final AhThemeController controller = AhThemeController(
-    store: PreferencesThemeStore(ref.watch(devicePreferencesProvider)),
+    store: AhPreferencesThemeStore(ref.watch(devicePreferencesProvider)),
   );
   // Reading from disk is not a network call, so starting it on first read is safe — and the
   // controller repaints when it lands, so a partner who chose dark sees at worst one light frame.
